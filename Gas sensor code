@@ -1,0 +1,53 @@
+#include <Adafruit_NeoPixel.h>	//neopixel library
+int PIN = 6;			
+int Buzz = 5;
+int Sensor = A0;		
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(12, PIN, NEO_GRB + NEO_KHZ800);
+    
+void setup() 
+	{
+        pinMode(Buzz, OUTPUT);
+      	pinMode(PIN, OUTPUT);	
+	    pinMode(A0, INPUT);	
+    	Serial.begin(9600);	
+
+  	strip.begin();		
+  	strip.show();		
+  	}
+  
+void loop() 
+	{
+  digitalWrite(Buzz,LOW);
+      	digitalWrite(PIN, LOW);	
+    	status_Indicator();	
+  	}
+  
+void status_Indicator()
+  	{
+    	int sensor_In = analogRead(A0);	
+    	Serial.println(sensor_In);	
+    
+    	if ( sensor_In >=250  )		
+    		{
+          digitalWrite(Buzz,HIGH);
+      		switch_led(strip.Color(255, 0, 0), 0, 12);
+    		}
+    	if (sensor_In < 250 && sensor_In >= 150)	
+    		{
+      		switch_led(strip.Color(255, 128, 0), 0, 12);
+    		} 
+	if ( sensor_In < 150  )	
+    		{
+      		switch_led(strip.Color(0, 255, 0), 0, 12);
+    		}
+    	delay(10);			
+  	}
+
+void switch_led(uint32_t color, int time, int led_num){ 	
+  for(uint32_t i=0; i<led_num; i++){
+    strip.setPixelColor(i, color);
+    strip.show();
+    delay(time);
+  }
+}
